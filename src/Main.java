@@ -4,64 +4,49 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-//        Account.setAnnualInterestRate(6.5);
-//        Account acc = new Account(1155, 300000);
-//
-//        acc.withdraw(16500);
-//        acc.deposit(50000);
-//
-//        acc.displayAccountInfo();
-
         Scanner scanner = new Scanner(System.in);
-        Account[] accounts = new Account[10];
 
-        for (int i = 0; i < accounts.length; i++){
-            accounts[i] = new Account(i, 10000);
-        }
+        Account myAccount = new Account("Семен", 1233, 1100);
+        myAccount.setAnnualInterestRate(7.5);
+
         while (true){
-            System.out.print("Введите ID счета (0-9): ");
-            int id = scanner.nextInt();
-            if (id == -1) break;
-            if (id < 0 || id >= accounts.length){
-                System.out.println("Некорректный ID. Повторите попытку");
-                continue;
+            System.out.println("\nГлавное меню:");
+            System.out.println("1. Показать информацию о счете");
+            System.out.println("2. Внести деньги");
+            System.out.println("3. Снять деньги");
+            System.out.println("4. Выход");
+            System.out.println("----------------");
+            int choice = scanner.nextInt();
+
+            switch (choice){
+                case 1:
+                    System.out.println("Имя владельца счета: " + myAccount.getName());
+                    System.out.println("Годовая процентная ставка: " + myAccount.getAnnualInterestRate() + "%");
+                    System.out.println("Текущий баланс: " + myAccount.getBalance());
+                    System.out.println("Транзакции: ");
+                    for (Transaction transaction : myAccount.getTransactions()){
+                        System.out.println(transaction.getType() + ": " + transaction.getAmount() + " на " + transaction.getDate());
+                    }
+                    break;
+                case 2:
+                    System.out.println("Введите сумму для пополнения: ");
+                    double depositAmount = scanner.nextDouble();
+                    myAccount.deposit(depositAmount);
+                    System.out.println("Сумма " + depositAmount + " успешно внесена на счет!");
+                    break;
+                case 3:
+                    System.out.println("Введите сумму для снятия: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    myAccount.withdraw(withdrawAmount);
+                    break;
+                case 4:
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Некорректный выбор. Повторите попытку!");
             }
-
-            Account account = accounts[id];
-            account.setAnnualInterestRate(6.5);
-
-            while (true){
-                System.out.println("1. Просмотр текущего баланса");
-                System.out.println("2. Снятие денег");
-                System.out.println("3. Внесение денег");
-                System.out.println("4. Выход");
-                int choice = scanner.nextInt();
-
-                switch (choice){
-                    case 1:
-                        System.out.println("Баланс: " + account.getBalance());
-                        System.out.println("Ежемесячный процент: " + account.getMonthlyInterest());
-                        System.out.println("Дата создания: " + account.getDateCreated());
-                        break;
-                    case 2:
-                        System.out.println("Введите сумму для снятия: ");
-                        double withdrawAmount = scanner.nextDouble();
-                        account.withdraw(withdrawAmount);
-                        break;
-                    case 3:
-                        System.out.println("Введите сумму пополнения: ");
-                        double depositAmount = scanner.nextDouble();
-                        account.deposit(depositAmount);
-                        break;
-                    case 4:
-                        break;
-                    default:
-                        System.out.println("Некорректный выбор. Повторите попытку!");
-                }
-                if (choice == 4) break;
-            }
+            if (choice > 4 || choice < 1) break;
         }
-        scanner.close();
     }
 }
 
@@ -80,7 +65,6 @@ class Account{
     public Account(int id, double balance){
         this.id = id;
         this.balance = balance;
-//        this.annualInterestRate = annualInterestRate;
         this.dateCreated = new Date();
     }
 
@@ -122,10 +106,6 @@ class Account{
     }
 
     public double getMonthlyInterest(){
-//        double monthlyInterestRate = annualInterestRate / 12;
-//        double monthlyInterest = balance * monthlyInterestRate;
-//        return monthlyInterest;
-//        //this.balance += monthlyInterest;
         return balance * (annualInterestRate / 100) / 12;
     }
 
